@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 
+import static javax.management.Query.gt;
+
 /**
  * <p>
  *  服务实现类
@@ -58,8 +60,9 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         }
         //充足 扣减库存
         boolean success = seckillVoucherService.update()
-                .setSql("stock = stock - 1")
-                .eq("voucher_id", voucherId).update();
+                .setSql("stock = stock - 1") //set stock = stock - 1
+                .eq("voucher_id", voucherId).gt("stock",0) //where id = ? and stock > 0 解决少卖
+                .update();
         if (!success) {
             return Result.fail("库存不足");
         }
