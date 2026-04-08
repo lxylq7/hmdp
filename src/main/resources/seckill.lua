@@ -1,7 +1,9 @@
---订单id
+--优惠卷id
 local voucherId = ARGV[1]
 --用户id
 local userId = ARGV[2]
+--订单id
+local orderId = ARGV[3]
 --数据key
 --库存key
 local stockKey = 'seckill:stock:' .. voucherId
@@ -22,5 +24,7 @@ end
 redis.call('incrby',stockKey,-1)
 --下单
 redis.call('sadd',orderKey,userId)
+--发送消息到队列中 XADD stream.orders * k1 v1 k2 v2 ...   *是id
+redis.call('xadd','stream.orders','*','voucherId',voucherId,'userId',userId,'id',orderId);
 --成功
 return 0
