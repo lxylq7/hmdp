@@ -3,6 +3,7 @@ package com.hmdp.controller;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.hmdp.dto.Result;
+import com.hmdp.service.impl.BlogServiceImpl;
 import com.hmdp.utils.SystemConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,12 @@ import java.util.UUID;
 @RestController
 @RequestMapping("upload")
 public class UploadController {
+
+    private final BlogServiceImpl blogServiceImpl;
+
+    public UploadController(BlogServiceImpl blogServiceImpl) {
+        this.blogServiceImpl = blogServiceImpl;
+    }
 
     @PostMapping("blog")
     public Result uploadImage(@RequestParam("file") MultipartFile image) {
@@ -60,4 +67,6 @@ public class UploadController {
         // 生成文件名
         return StrUtil.format("/blogs/{}/{}/{}.{}", d1, d2, name, suffix);
     }
+
+
 }
